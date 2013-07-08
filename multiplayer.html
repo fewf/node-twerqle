@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js" type="text/javascript"></script>
+        <meta charset="utf-8">    
+        <title>TWERQLE</title>
+        <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+        <style type="text/css">
+        body {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #twerqle {
+            overflow: hidden;
+            position: relative; 
+/*            left: 311px; 
+            top: -738px;*/
+            cursor: move;
+            /*background-color: black;*/
+            border-top: 1px solid white;
+            border-left: 1px solid white;
+        }
+        #twerqle div.row {
+            clear: both;
+        }
+        #twerqle div.row div.cell {
+/*            min-width: 50px;
+            height: 50px;*/
+            float: left;
+            display: inline-block;
+            border-right: 1px solid white;
+            border-bottom: 1px solid white;
+            background-color: #ddd;
+        }
+        #twerqle div.row div.hasTile {
+            border: 1px solid white;
+        }
+        #twerqle div.row div.alt {
+            background-color: #eee;
+        }
+        #twerqle div.row div.center {
+            background-color: #bbffbb;
+        }
+        #twerqle div.row div.highlight {
+            background-color: #00FF15;
+        }
+        #twerqle div.row div.highlight-error {
+            background-color: red;
+        }
+/*        #twerqle div.row div.start {
+            clear: both;
+        }*/
+/*        #twerqle div.playable {
+            background-color: green;
+        }*/
+        #player1, #player2, #player3, #player4 {
+            position: fixed;
+        }
+        #player1 {
+            top: 0%;
+            left: 33%;
+            width: 100%;
+        } 
+        #player2 {
+            right: 80%;
+            top: 50%;
+        } 
+        #player3 {
+            bottom: 0%;
+            left: 50%;
+        } 
+        #player4 {
+            left: 80%;
+            top: 50%;
+        }
+        #rack {
+            /*position: absolute;*/
+            margin: 0 auto;
+        }
+        #rack img.tile {
+            cursor: move;
+            margin: 3px 5px;
+            display: inline-block;
+        }
+        img.tile {
+
+        }
+        img.selected {
+            margin: 3px;
+            border: 2px dotted red;
+            border-radius: 3px;
+        }
+        img.tile.c0 { background-color: #FF8080; }
+        img.tile.c1 { background-color: #FFBF80; }
+        img.tile.c2 { background-color: #FFFF80; }
+        img.tile.c3 { background-color: #BFFF80; }
+        img.tile.c4 { background-color: #80FF80; }
+        img.tile.c5 { background-color: #80FFBF; }
+        img.tile.c6 { background-color: #80FFFF; }
+        img.tile.c7 { background-color: #80BFFF; }
+        img.tile.c8 { background-color: #8080FF; }
+        img.tile.c9 { background-color: #BF80FF; }
+        img.tile.c10 { background-color: #FF80FF; }
+        img.tile.c11 { background-color: #FF80BF; }
+        img.tile.cblack { background-color: black; }
+
+        img.computer2Tile {
+            position: fixed;
+            top: 0%;
+            left: 50%;
+        }
+
+        img.computer3Tile {
+            position: fixed;
+            top: 50%;
+            left: 100%;
+        }
+
+        img.computer1Tile {
+            position: fixed;
+            top: 50%;
+            left: 0%;
+        }
+        /*#players div.player {*/
+/*            margin: 1em;
+        }*/
+        #player_controls {
+            border-radius: 5px;
+            border: #444 solid 2px;
+            background-color: #ccc;
+            position: fixed;
+            bottom: 1%;
+            left: 40%;
+            margin: 0 auto;
+        }
+        span#player_score {
+            margin: 0 2em;
+        }
+        #player_buttons {
+            text-align: center;
+        }
+        #controls {
+            width: 230px;
+            height: 230px;
+            background-color: white;
+            opacity: 0.5;
+            border-radius: 5px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 5px;
+        }
+        #zoom {
+            margin: 0 auto;
+        }
+        #zoom-container {
+            margin-left: 1em;
+            float: left;
+        }
+        #playerTable {
+            border-collapse: collapse;
+            border: none;
+            opacity: 1;
+            float: left;    
+        }
+        #playerTable td, #playerTable th{
+            text-align: center;
+            border: none;
+            border-radius: 1px;
+            padding: 3px;
+        }
+        #twerqle div.test {
+            background-color: red;
+        }
+
+        #twerqle.zoom10 div.row div.cell, #twerqle.zoom10 img.tile {
+            height: 10px;
+            min-width: 10px;
+        }
+        #twerqle.zoom15 div.row div.cell, #twerqle.zoom15 img.tile {
+            height: 15px;
+            min-width: 15px;
+        }
+        #twerqle.zoom20 div.row div.cell, #twerqle.zoom20 img.tile {
+            height: 20px;
+            min-width: 20px;
+        }
+
+        #twerqle.zoom25 div.row div.cell, #twerqle.zoom25 img.tile {
+            height: 25px;
+            min-width: 25px;
+        }
+
+        #twerqle.zoom30 div.row div.cell, #twerqle.zoom30 img.tile {
+            height: 30px;
+            min-width: 30px;
+        }
+
+        #twerqle.zoom35 div.row div.cell, #twerqle.zoom35 img.tile {
+            height: 35px;
+            min-width: 35px;
+        }
+
+        #twerqle.zoom40 div.row div.cell, #twerqle.zoom40 img.tile {
+            height: 40px;
+            min-width: 40px;
+        }
+
+        #twerqle.zoom45 div.row div.cell, #twerqle.zoom45 img.tile {
+            height: 45px;
+            min-width: 45px;
+        }
+
+        #twerqle.zoom50 div.row div.cell, #twerqle.zoom50 img.tile {
+            height: 50px;
+            min-width: 50px;
+        }
+
+        #twerqle.zoom55 div.row div.cell, #twerqle.zoom55 img.tile {
+            height: 55px;
+            min-width: 55px;
+        }
+
+        #twerqle.zoom60 div.row div.cell, #twerqle.zoom60 img.tile {
+            height: 60px;
+            min-width: 60px;
+        }
+
+        #twerqle.zoom65 div.row div.cell, #twerqle.zoom65 img.tile {
+            height: 65px;
+            min-width: 65px;
+        }
+
+        #twerqle.zoom70 div.row div.cell, #twerqle.zoom70 img.tile {
+            height: 70px;
+            min-width: 70px;
+        }
+
+        #twerqle.zoom75 div.row div.cell, #twerqle.zoom75 img.tile {
+            height: 75px;
+            min-width: 75px;
+        }
+
+        #twerqle.zoom80 div.row div.cell, #twerqle.zoom80 img.tile {
+            height: 80px;
+            min-width: 80px;
+        }
+        #announce {
+            font-family: sans-serif;
+            font-size: 20pt;
+            font-weight: bold;
+            position: fixed;
+            left: 175px;
+            top: 130px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid blue;
+            background-color: white;
+        }
+
+        #dialog-container input.slider-input {
+            width: 2em;
+            border: 1px solid #333;
+        }
+        #dialog-container #showMore {
+            margin: 1em;
+        }
+        #dialog-controls {
+            font-size: 12pt;
+            background-color: white;
+        }
+        #dialog-controls #cTypes {
+            clear: both;
+        }
+        #dialog-controls div.hidden {
+            display: none;
+        }
+        .slider {
+            clear: both;
+        }
+        .slider p {
+            width: 35%;
+            float: left;
+        }
+        .slider p input {
+            float: right;
+        }
+        .slider .ui-slider {
+            margin-left: 3em;
+            margin-top: 1.1em;
+            width: 45%;
+            display: inline-block;
+        }
+        #dialog-how p {
+            font-size: 10pt;
+            clear: both;
+        }
+        #image-column img {
+            display: block;
+            clear: both;
+            width: 135px;
+            height: 90px;
+            float: left;
+            margin: 1em 0;
+        }
+        #controls #chatUI {
+            clear:both;
+            width: 100%;
+        }
+        #chatMessages {
+            height: 6em;
+            overflow-y: scroll;
+        }
+        #chatMessages p {
+            margin: 3px 0;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="twerqle"></div>
+        <div id="players"></div>
+        <div id="content"></div>
+
+        <!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>-->
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        <script type="text/javascript" src="bundle.js"></script>
+        <script type="text/javascript" src="script/client.js"></script>
+        <script type="text/javascript">
+//                 $(document).ready(function() {
+// console.log("$(document).ready(function() ");
+
+//                     "use strict";
+//                     // for better performance - to avoid searching in DOM
+//                     var content = $('#chatMessages');
+//                     var input = $('#chatInput');
+//                     var chatName = $('#chatName');
+//                     var status = $('#chatStatus')
+             
+//                     // my color assigned by the server
+//                     var myColor = false;
+//                     // my name sent to the server
+//                     var myName = false;
+             
+//                     // if user is running mozilla then use it's built-in WebSocket
+//                     window.WebSocket = window.WebSocket || window.MozWebSocket;
+             
+//                     // if browser doesn't support WebSocket, just show some notification and exit
+//                     if (!window.WebSocket) {
+//                             content.html($('<p>', { text: 'Sorry, but your browser doesn\'t '
+//                                                                                     + 'support WebSockets.'} ));
+//                             input.hide();
+//                             $('span').hide();
+//                             return;
+//                     }
+
+//                     window.io = {};
+//                     // open connection
+//                     io.connection = new WebSocket('ws://127.0.0.1:1337');
+             
+//                     io.connection.onopen = function () {
+// console.log("io.connection.onopen = function () ");
+//                             // first we want users to enter their names
+//                             input.removeAttr('disabled');
+//                             chatName.text('Choose name:');
+//                     };
+             
+//                     io.connection.onerror = function (error) {
+// console.log("io.connection.onerror = function (error) ");
+//                             // just in there were some problems with conenction...
+//                             content.html($('<p>', { text: 'Sorry, but there\'s some problem with your '
+//                                                                                     + 'connection or the server is down.' } ));
+//                     };
+             
+//                     // most important part - incoming messages
+//                     io.connection.onmessage = function (message) {
+// console.log("io.connection.onmessage = function (message) ");
+//                             // try to parse JSON message. Because we know that the server always returns
+//                             // JSON this should work without any problem but we should make sure that
+//                             // the massage is not chunked or otherwise damaged.
+//                             try {
+//                                     var json = JSON.parse(message.data);
+//                             } catch (e) {
+//                                     console.log('This doesn\'t look like a valid JSON: ', message.data);
+//                                     return;
+//                             }
+             
+//                             // NOTE: if you're not sure about the JSON structure
+//                             // check the server source code above
+//                             if (json.type === 'history') { // entire message history
+//                                     // insert every single message to the chat window
+//                                     for (var i=0; i < json.data.length; i++) {
+//                                             addMessage(json.data[i].author, json.data[i].text,
+//                                                                  json.data[i].color, new Date(json.data[i].time));
+//                                     }
+//                             } else if (json.type === 'in wait') {
+//                                 input.removeAttr('disabled'); // let the user write another message
+//                                 chatName.text(myName + ': ').css('color', myColor);
+//                                 status.text(json.data.length + ' in room.');
+//                                 $('#usernames').empty();
+//                                 for (var i = json.data.length - 1; i >= 0; i--) {
+//                                     $('#usernames').append($('<li>').text(json.data[i]));
+//                                 };
+//                             } else if (json.type === 'message') { // it's a single message
+//                                     input.removeAttr('disabled'); // let the user write another message
+//                                     addMessage(json.data.author, json.data.text,
+//                                                          json.data.color, new Date(json.data.time));
+//                             } else if (json.type === 'start game') {
+//                                     input.removeAttr('disabled'); // let the user write another message
+//                                     window.g = state.initState(['You'], [0], 6, 3);
+//                                     g.players = json.data.players;
+//                                     g.bag = json.data.bag;
+//                                     g.startIndex = json.data.startIndex;
+//                                     for (var i = g.players.length - 1; i >= 0; i--) {
+//                                         if (g.players[i].name === myName) g.player = g.players[i];
+//                                     };
+//                                     g.minRow = g.center - g.numTypes * g.copies;
+//                                     g.maxRow = g.center + g.numTypes * g.copies;
+//                                     g.minCol = g.center - g.numTypes * g.copies;
+//                                     g.maxCol = g.center + g.numTypes * g.copies;
+//                                     g.columns = g.maxCol - g.minCol + 1;
+//                                     g.heldTile;
+//                                     g.zoomLevel = 50;
+//                                     g.speed = 2;
+//                                     board.initGame();
+//                                     $('#chatUI').insertAfter('#zoom-container');
+//                                     $('#dialog-container').remove();
+//                                     console.log(g.getCurrentPlayer().tiles);
+//                             } else if (json.type === 'turn success') {
+//                                 var player = json.data.player;
+//                                 if (player.name !== g.player.name) {
+//                                     var move = json.data.move;
+//                                     pControls.serverPlay(move, player);
+//                                 } else {
+//                                     var result = g.endTurn();
+//                                     pControls.endTurn(result);
+//                                 }
+//                             } else if (json.type === 'exchange success') {
+//                                 var tiles = json.data;
+//                                 pControls.exchangeTiles(tiles);
+//                             } else {
+//                                 console.log('Hmm..., I\'ve never seen JSON like this: ', json);
+//                             }
+//                     };
+             
+//                     /**
+//                      * Send mesage when user presses Enter key
+//                      */
+//                     $('#chatInput').keydown(function(e) {
+// console.log("$('#chatInput').keydown(function(e) ");
+//                             if (e.keyCode === 13) {
+//                                     var msg = $(this).val();
+//                                     if (!msg) {
+//                                             return;
+//                                     }
+//                                     // send the message as an ordinary text
+//                                     if (msg)
+//                                     io.connection.send('czhzazt' + msg);
+//                                     $(this).val('');
+//                                     // disable the input field to make the user wait until server
+//                                     // sends back response
+//                                     input.attr('disabled', 'disabled');
+             
+//                                     // we know that the first message sent from a user their name
+//                                     if (myName === false) {
+//                                             myName = msg;
+//                                     }
+//                             }
+//                     });
+                     
+//                     /**
+//                      * This method is optional. If the server wasn't able to respond to the
+//                      * in 3 seconds then show some error message to notify the user that
+//                      * something is wrong.
+//                      */
+//                     setInterval(function() {
+// console.log("setInterval(function() ");
+//                             if (io.connection.readyState !== 1) {
+//                                     status.text('Error');
+//                                     input.attr('disabled', 'disabled').val('Unable to comminucate '
+//                                                                             + 'with the WebSocket server.');
+//                             }
+//                     }, 3000);
+             
+//                     /**
+//                      * Add message to the chat window
+//                      */
+//                     function addMessage(author, message, color, dt) {
+// console.log("function addMessage(author, message, color, dt) ");
+//                             content.prepend('<p><span style="color:' + color + '">' + author + '</span> @ ' +
+//                                      + (dt.getHours() < 10 ? '0' + dt.getHours() : dt.getHours()) + ':'
+//                                      + (dt.getMinutes() < 10 ? '0' + dt.getMinutes() : dt.getMinutes())
+//                                      + ': ' + message + '</p>');
+//                     }
+//                 });
+        </script>
+    </body>
+</html>
