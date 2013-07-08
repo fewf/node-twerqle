@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "websocket": "1.0.x",
-    "underscore": "1.4.x"
+    "underscore": "1.4.x",
+    "browserify": "2.23.x",
+    "qunit": "0.5.x"
   },
   "repository": {
     "type": "git",
