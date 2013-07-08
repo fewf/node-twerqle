@@ -1,0 +1,22 @@
+{
+  "name": "node-twerqle",
+  "version": "0.0.0",
+  "description": "Twerqle for you and your friend to play.",
+  "main": "bundle.js",
+  "dependencies": {
+    "websockets": "1.0.x",
+    "underscore": "1.4.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/greggreggreg7/node-twerqle.git"
+  },
+  "keywords": [
+    "games"
+  ],
+  "author": "Greg Altman",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/greggreggreg7/node-twerqle/issues"
+  }
+}
