@@ -4,7 +4,7 @@
   "description": "Twerqle for you and your friend to play.",
   "main": "bundle.js",
   "dependencies": {
-    "websockets": "1.0.x",
+    "websocket": "1.0.x",
     "underscore": "1.4.x"
   },
   "repository": {
