@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "description": "Twerqle for you and your friend to play.",
   "main": "bundle.js",
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  },
   "dependencies": {
     "websocket": "1.0.x",
     "underscore": "1.4.x"
